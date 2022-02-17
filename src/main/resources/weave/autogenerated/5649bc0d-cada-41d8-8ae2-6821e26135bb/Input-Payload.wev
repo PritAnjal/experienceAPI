@@ -1,0 +1,12 @@
+%dw 2.0
+
+type auto_5649bc0d_cada_41d8_8ae2_6821e26135bb_Input_Payload = {
+  planetype: String, 
+  price: Number, 
+  origin: String, 
+  destination: String, 
+  CustomerName: String, 
+  departureDate: String, 
+  _?: Any
+}
+

@@ -1,0 +1,15 @@
+%dw 2.0
+
+type auto_8d002906_8c98_4179_b9bf_0ae257141e94_Input_Payload = {
+  No_Of_Guest: Number, 
+  Email: String, 
+  Guest_Name: String, 
+  Contact_No: String, 
+  Check_In_Date: String, 
+  Hotel_ID: Number, 
+  Gender: String, 
+  Age: Number, 
+  Check_Out_Date: String, 
+  _?: Any
+}
+

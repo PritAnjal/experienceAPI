@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+
+<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="e670d34c-8afd-4d25-a6f6-529f6d597654" >
+		<wsc:connection wsdlLocation="hotelBooking.wsdl" service="HotelBooking" port="HotelBookingSOAP" address="${secure::hotelProcessApi.host}" />
+	</wsc:config>
+	<flow name="getAllFlight" doc:id="5d6184e6-26b1-40e3-9083-3827a9e43e19" >
+		<flow-ref doc:name="Flow Reference" doc:id="e5fd0ac2-e265-4922-8434-07462f54fa18" name="octaBarerToken" target="accessToken" targetValue="#[payload.access_token]"/>
+		<http:request method="GET" doc:name="Request" doc:id="8535adfe-fbf1-4bdb-8583-73a5fa6a1538" config-ref="flights_request_configuation" path="/Indigoflights">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "Bearer " ++ vars.accessToken
+}]]]></http:headers>
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"origin" : attributes.queryParams.origin,
+	"destination" : attributes.queryParams.destination
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="93d37c89-9c7b-47c1-a275-034ea34d9677" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="getFlightByCode" doc:id="aa6b43d3-6866-42fb-9743-c5a9584fd7a6" >
+		<flow-ref doc:name="Flow Reference" doc:id="a4e9ede5-e635-4364-88b9-e72ee05197dc" name="octaBarerToken" target="accessToken" targetValue="#[payload.access_token]"/>
+		<http:request method="GET" doc:name="Request" doc:id="adade9a3-f883-435c-8ad9-361ec1c1ea06" config-ref="flights_request_configuation" path="/Indigoflights/{code}">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "Bearer " ++ vars.accessToken
+}]]]></http:headers>
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"code" : attributes.uriParams.code
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="98359239-94d7-4408-8ff8-7839568b1f8b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<sub-flow name="octaBarerToken" doc:id="673a0b42-2807-4dbb-a6d5-f144f47751dd" >
+		<http:request method="POST" doc:name="Request" doc:id="1a7845e4-ca7a-43c9-8b1f-bd6a56a8021d" config-ref="BarerTokenRequestConfigurations" path="/oauth2/aus3uek4nlt7mafje5d7/v1/token">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Content-Type" : "application/x-www-form-urlencoded"
+}]]]></http:headers>
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"scope" : "read",
+	"grant_type" : "client_credentials"
+}]]]></http:query-params>
+		</http:request>
+	</sub-flow>
+	<flow name="createFlightByCode" doc:id="5649bc0d-cada-41d8-8ae2-6821e26135bb" >
+		<flow-ref doc:name="Flow Reference" doc:id="116d8eb8-449e-44ca-956f-77278eca50a1" name="octaBarerToken" target="accessToken" targetValue="#[payload.access_token]" />
+		<http:request method="POST" doc:name="Request" doc:id="a8342ce9-571e-4f8c-bef7-cfe79312798b" config-ref="flights_request_configuation" path="/Indigoflights/{code}" >
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "Bearer " ++ vars.accessToken
+}]]]></http:headers>
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"code" : attributes.uriParams.code
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="ad465ec5-49b5-4c08-b794-2d19d5a27ce6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="deleteFlightByCode" doc:id="660a3100-73e9-4aa2-b07d-9de5e3d8b45f" >
+		<flow-ref doc:name="Flow Reference" doc:id="707ca77f-eef6-4810-915c-d4efe49c5380" name="octaBarerToken" target="accessToken" targetValue="#[payload.access_token]" />
+		<http:request method="DELETE" doc:name="Request" doc:id="48d7f61e-5674-48c1-bacc-9b56fe436c25" config-ref="flights_request_configuation" path="/Indigoflights/{code}" >
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "Bearer " ++ vars.accessToken
+}]]]></http:headers>
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"code" : attributes.uriParams.code
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="13411cff-2a18-4aa7-81b7-f74daaefd699" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="getCars" doc:id="4d8ae8f8-153e-45bf-99ec-b6994380f3e9" >
+		<http:request method="GET" doc:name="Request" doc:id="fc17d4f1-ae5a-4f40-9a0e-adb6793f9ebd" config-ref="Cars_Request_Configurations" path="api/cars">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"source" : attributes.queryParams.source,
+	"destination" : attributes.queryParams.destination
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="c5ef3d88-1894-4426-b239-143235bc6f0e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="createCarBooking" doc:id="57e2feaa-c59a-4cf0-ad94-db3898ef49c9" >
+		<http:request method="POST" doc:name="Request" doc:id="7f2b9e78-c858-490c-a63d-3d4bfcf669eb" config-ref="Cars_Request_Configurations" path="/api/carbookings" >
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="e4226c9c-25ce-420f-b87c-2218e060203b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="deleteCarBooking" doc:id="4b40fb3a-2d6c-4110-8b4b-1640dbfd67c1" >
+		<http:request method="DELETE" doc:name="Request" doc:id="efcccaf1-b4bc-461c-a8c7-8a5ba7f1224a" config-ref="Cars_Request_Configurations" path="/api/carbookings/{ID}" >
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"ID" : attributes.uriParams.ID
+}]]]></http:uri-params>
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"partner" : attributes.queryParams.partner
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="37bbc1c1-23b7-4b79-97fd-3fd140bf28ec" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="getHotels" doc:id="085908da-a166-4f09-b04e-a5629505120d" >
+		<ee:transform doc:name="Transform Message" doc:id="16bdeeea-7ec1-4d40-8bc5-0a20166bf58d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://www.example.org/HotelBooking/
+---
+{
+	ns0#GET_Hotels: {
+		City: attributes.queryParams.city as String,
+		Check_In_Date: 12022022,
+		Check_Out_Date: 12022022,
+		No_Of_Guest: 4
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume doc:name="Consume" doc:id="215a1911-6342-4227-b1bd-1fc433354770" config-ref="Web_Service_Consumer_Config" operation="GET_Hotels"/>
+		<ee:transform doc:name="Transform Message" doc:id="0ea43a00-cad1-42a8-beb6-0ae83133242b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[payload.body]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="addHotels" doc:id="8d002906-8c98-4179-b9bf-0ae257141e94" >
+		<ee:transform doc:name="Transform Message" doc:id="b063f605-9fce-49df-ae3b-958b9e907434" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://www.example.org/HotelBooking/
+---
+{
+	ns0#ADD_Booking: {
+		Hotel_ID: payload.Hotel_ID,
+		Guest_Name: payload.Guest_Name,
+		Age: payload.Age,
+		Gender: payload.Gender,
+		Check_In_Date: payload.Check_In_Date as String,
+		Check_Out_Date: payload.Check_Out_Date as String,
+		Email: payload.Email,
+		Contact_No: payload.Contact_No,
+		No_Of_Guest: payload.No_Of_Guest
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="ADD_Booking" doc:name="Consume" doc:id="bad01d5f-bbd2-4af6-a14e-3f503a569f68" config-ref="Web_Service_Consumer_Config" />
+		<ee:transform doc:name="Transform Message" doc:id="4c50fcc0-b7aa-4b1f-8650-21f7d1a099ee" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[payload.body]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="getBooking" doc:id="432241b4-3b9f-44f0-aff8-4d7b52c6723e" >
+		<ee:transform doc:name="Transform Message" doc:id="12ed2369-0d94-4711-ba53-679830331819" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://www.example.org/HotelBooking/
+---
+{
+	ns0#GET_Booking: {
+		Hotel_ID: attributes.queryParams.Hotel_ID
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="GET_Booking" doc:name="Consume" doc:id="196b1383-8f29-4f82-b551-bd4a667094de" config-ref="Web_Service_Consumer_Config" />
+		<ee:transform doc:name="Transform Message" doc:id="bb457a59-80f4-412f-a6e5-197b82ef722f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="deleteBooking" doc:id="ba542f09-2fd3-4c6e-afc5-c4bfd1b660f2" >
+		<ee:transform doc:name="Transform Message" doc:id="934c1e27-7369-4dee-858c-7fa7d6733485" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://www.example.org/HotelBooking/
+---
+{
+	ns0#DELETE_Booking: {
+		Hotel_ID: attributes.queryParams.Hotel_ID
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="DELETE_Booking" doc:name="Consume" doc:id="cde30f32-4224-4d62-b959-0d2595e40167" config-ref="Web_Service_Consumer_Config" />
+		<ee:transform doc:name="Transform Message" doc:id="62718caf-8f45-4e12-974f-c5981e4b3214" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[payload.body]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

@@ -1,0 +1,13 @@
+http:
+  host: "0.0.0.0"
+  port: "8085"
+carProcessApi:
+  host: "![ymOiLUslHviFNgB/TnC7ktWuEYooIWSsVAiHhglm+R66DXO9mn4Q9EfUY4Y9Kc7U]"
+hotelProcessApi:
+  host: "![7JEyRqnViltpt8yODpg7GfniVgK7k/MfCzNa0r/UV9XkxJLy8seYimFPxEUp2gMrU93z88tgTXFB2b90yy4j5Ep0bMx4v7aINmZ14HoGAt4=]"
+flightProcessApi:
+  host: "![zqMrY9A3K23ovrFjALaVrUnl67J80K4520ORiiP1GLi0RLZ1vWz+TZK5gJ35Mf8QxI9znJAWqxHB9DtLWthz3g==]"
+https:
+  host: "![lHcvrM6Ko8X+LnF2De9ekZLTrqXfA1kmTQDeYxLwAfE=]"
+  username: "![6qgqqQzQldStCNPXM4K0lr9Bv1yFiwBbAmpiuBL0wOs=]"
+  password: "![R4O6i9ZTSitnDheYEZMAWhnBK103j8JGs+VMlStp6FXOKyy9MwQrBhomoJkQ7qtV]"

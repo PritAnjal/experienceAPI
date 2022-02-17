@@ -1,0 +1,11 @@
+{
+  "Hotel_ID": 1,
+	"Guest_Name": "Stone Wood",
+	"Age": 27,
+	"Gender": "Male",
+	"Check_In_Date": "16022022",
+	"Check_Out_Date": "19022022",
+	"Email" : "pratik.a.thorat@apisero.com",
+  "Contact_No": "7507556485",
+  "No_Of_Guest": 5
+}

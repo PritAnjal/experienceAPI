@@ -1,0 +1,19 @@
+[{
+	"Hotel_ID": 1,
+	"Hotel_Name": "Stone Wood",
+	"Room_Type": "Delux",
+	"Price": "3000",
+	"Rating": "4",
+	"Breakfast": "yes",
+	"Cancellation" : "yes"	
+},
+{
+	"Hotel_ID": 2,
+	"Hotel_Name": "Sterling",
+	"Room_Type": "Delux",
+	"Price": "5000",
+	"Rating": "5",
+	"Breakfast": "yes",
+	"Cancellation" : "yes"	
+}
+]

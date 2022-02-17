@@ -1,0 +1,19 @@
+%dw 2.0
+
+type auto_57e2feaa_c59a_4cf0_ad94_db3898ef49c9_Output_Payload = {
+  carBookingDetails: {
+    NoOfSeats: Number, 
+    firstname: String, 
+    scheduledTime: String, 
+    partner: String, 
+    price: Number, 
+    destination: String, 
+    scheduledDate: String, 
+    source: String, 
+    lastname: String, 
+    _?: Any
+  }, 
+  message: String, 
+  _?: Any
+}
+

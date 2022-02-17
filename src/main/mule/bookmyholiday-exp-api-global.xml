@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	    <http:listener-config name="bookmyholiday-exp-api-httpListenerConfig">
+        <http:listener-connection host="${http.host}" port="${http.port}" />
+    </http:listener-config>
+    <http:request-config name="BarerTokenRequestConfigurations" doc:name="HTTP Request configuration" doc:id="940e9a59-97bb-4119-9eb8-f70053f8e5af" >
+		<http:request-connection protocol="HTTPS" host="${secure::https.host}" >
+			<http:authentication >
+				<http:basic-authentication username="${secure::https.username}" password="${secure::https.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="abc234af-cf6f-4256-a2e1-4a7e9343008b" file="config.yaml" key="Password12345678" />
+	<configuration-properties doc:name="Configuration properties" doc:id="4b8da409-2b6d-46c2-9f6c-5332eaac22c0" file="config.yaml" />
+	<http:request-config name="flights_request_configuation" doc:name="HTTP Request configuration" doc:id="aaf3e623-4f34-4651-ac7b-3fe000f66452" >
+		<http:request-connection host="${secure::flightProcessApi.host}"/>
+	</http:request-config>
+	<http:request-config name="Cars_Request_Configurations" doc:name="HTTP Request configuration" doc:id="ec44bb81-36fc-4507-bc29-f16f4fbacfde" >
+		<http:request-connection host="${secure::carProcessApi.host}" />
+	</http:request-config>
+	
+</mule>

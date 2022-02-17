@@ -1,0 +1,23 @@
+%dw 2.0
+
+type auto_5649bc0d_cada_41d8_8ae2_6821e26135bb_Input_Attributes = {|
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  headers: {|  |}, 
+  listenerPath: String, 
+  method: String, 
+  queryParams: {|  |}, 
+  queryString: String, 
+  relativePath: String, 
+  remoteAddress: String, 
+  requestPath: String, 
+  requestUri: String, 
+  scheme: String, 
+  uriParams: {| code: String |}, 
+  version: String, 
+  localAddress: String
+|}
+

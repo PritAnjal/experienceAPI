@@ -1,0 +1,122 @@
+#%RAML 1.0
+title: bookmyholiday-exp-api
+
+uses:
+  bookmyholiday_lib: exchange_modules/b05fe434-a8a3-45ed-b199-2b33ce750dbe/bookmyholiday-car-library/1.0.0/bookmyholiday-library.raml
+  FlightResource: Library/FlightsLibrary.raml
+  hotelresource: Library/HotelLibrary.raml
+types:
+  getflightsdata: !include DataType/getAllFlightsDataType.raml
+
+/cars:
+  get:
+    description: get the details of the cars available
+    queryParameters:
+      source:
+        type: string
+        required: true
+      destination:
+        type: string
+        required: true
+
+    responses:
+      200:
+        body:
+          application/json:
+            type: bookmyholiday_lib.get_carbooking_response_datatype[]
+            examples:
+              output: !include exchange_modules/b05fe434-a8a3-45ed-b199-2b33ce750dbe/get_carbooking_response_example/1.0.0/get_carbooking_response_example.raml
+
+  post:
+    body:
+      application/json:
+        type: bookmyholiday_lib.post_carbooking_request_datatype
+        examples: 
+          input: !include exchange_modules/b05fe434-a8a3-45ed-b199-2b33ce750dbe/post_carbooking_request_example/1.0.0/post_carbooking_request_example.raml
+    responses:
+      201:
+        body:
+          application/json:
+            type: bookmyholiday_lib.post_carbooking_response_datatype
+            examples:
+              output: !include exchange_modules/b05fe434-a8a3-45ed-b199-2b33ce750dbe/post_carbooking_response_example/1.0.0/post_carbooking_response_example.raml
+  /{ID}:
+    delete:
+      description: Delete book a car with ola partner
+      is:
+        - bookmyholiday_lib.error_responses_trait
+      queryParameters:
+        partner:
+          type: string
+          required: true
+      responses:
+        201:
+          body:
+            application/json:
+              example:
+                {
+                  message: "Booking has been deleted"
+                }
+/Indigoflights:
+  type:
+    FlightResource.flightCollection:
+      getResponse: !include Examples/getAllFlightsResponse.json
+      getBodyType: getflightsdata[]
+  get:
+    description: Fetch all the flights. Filter on the basis of Destination or origin.
+    queryParameters:
+      destination:
+        type: string
+        required: true
+        example: "Dubai"
+      origin:
+        type: string
+        required: true
+        example: "Mumbai"
+    
+  /{code}:
+    type:
+      FlightResource.flightCollection:
+        getResponse: !include Examples/getFlightsByCodeResponse.json
+        getBodyType: !include DataType/getFlightByCodeDataType.raml
+        postResponse: !include Examples/ByFlightCode.json
+        postBodyType: !include DataType/FlightPostdataType.raml
+        deleteRequest: !include Examples/deleteRequestBody.json
+        deleteBodyType: !include DataType/DeleteFlightdataType.raml
+        
+    get:
+      description: Fetch flight details on the basis of Flight Code
+    
+    post:
+      description: Book a flight on basis of Flight Code
+    
+    delete:
+      description: Cancel a booked flight on basis of Flight Code
+
+/hotel:
+  type:
+    hotelresource.hotelCollection
+  get:
+    description: get all hotels in the city.
+    queryParameters:
+      city:
+        type: string
+        required: true
+  /booking:
+    type:
+      hotelresource.hotelBookingcollection
+    get:
+        description: get booking for Hotel ID.
+        queryParameters:
+         Hotel_ID:
+           type: integer
+           required: true
+    post:
+      description: Add booking for Hotel.
+
+    delete:
+      description: delete booking for Hotel ID.
+      queryParameters:
+         Hotel_ID:
+           type: integer
+           required: true

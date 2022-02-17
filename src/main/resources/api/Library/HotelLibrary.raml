@@ -1,0 +1,42 @@
+#%RAML 1.0 Library
+
+traits:
+  errorResponse: !include ../Trait/ErrorResponseTrait.raml
+types:
+  gethoteldata: !include ../DataType/getAllHotelResponse.raml
+  getHotelBooking: !include ../DataType/BookingDetails.raml
+resourceTypes:
+  hotelCollection:
+    is: [errorResponse]
+    get?:
+      responses:
+        200:
+          body:
+            application/json:
+              type: gethoteldata[] 
+              example: !include ../Examples/getAllHotelsResponse.json
+  hotelBookingcollection:
+    is: [errorResponse]
+    get?:
+      responses:
+        200:
+          body:
+            application/json:
+              type: getHotelBooking
+              example: !include ../Examples/getHotelBookingsResponse.json
+    post?:
+      body:
+        application/json:
+          type: getHotelBooking
+          example: !include ../Examples/getHotelBookingsResponse.json
+      responses:
+        201:
+          body:
+            application/json:
+              example: "Your hotel has been booked"
+    delete?:
+      responses:
+        200:
+          body:
+            application/json:
+              example: "Your booking has been cancellled successfully"             
